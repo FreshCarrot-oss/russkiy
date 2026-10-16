@@ -5,9 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Тренажёры по русскому</title>
 <meta name="description" content="Тренажёры по русскому языку для 10 класса и подготовки к ЕГЭ: ударения, паронимы, формы слов, корни, приставки, Н и НН.">
-<meta name="theme-color" content="#f4f4f7" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#121219" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f4f4f7">
 <link rel="stylesheet" href="assets/site.css">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<script src="assets/theme.js"></script>
 <style>
   .hero { display: grid; gap: 8px; padding-block: 10px 6px; }
   .hero h1 { font-size: clamp(30px, 9vw, 40px); }
@@ -15,6 +18,9 @@
   .sec { display: grid; gap: 10px; margin-top: 22px; }
   .sec > h2 { font: 700 13px/1 var(--f-ui); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
   .topics { display: grid; gap: 10px; }
+  .searchbox { position: relative; margin-top: 14px; }
+  .searchbox svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; pointer-events: none; }
+  .searchbox .search { padding-left: 42px; }
   .topic {
     display: grid; gap: 8px; text-decoration: none; color: var(--ink);
     background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px;
@@ -50,7 +56,7 @@
 <body>
 <div class="wrap">
   <header class="hero">
-    <span class="eyebrow">10 класс · подготовка к ЕГЭ-2026</span>
+    <div class="topbar"><span class="eyebrow">10 класс · подготовка к ЕГЭ-2026</span><span data-theme-toggle></span></div>
     <h1>Тренажёры по <span class="hl">русскому</span></h1>
     <p>Выбери тему. В каждой есть тренировка со случайными словами, диктант, задание в формате ЕГЭ, полный список и правила.</p>
   </header>
@@ -61,6 +67,12 @@
     <span><span class="muted" style="font-size:13px">Продолжить</span><br><b id="contTitle"></b></span>
     <span class="btn small" style="display:inline-flex;align-items:center">Открыть</span>
   </a>
+
+  <div class="searchbox">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>
+    <input class="search" id="find" type="search" placeholder="Найти тему: ударения, НН, 13…" autocomplete="off" aria-label="Найти тему">
+  </div>
+  <p class="task-line" id="findEmpty" hidden style="margin-top:14px">Такой темы пока нет. Попробуй другое слово или номер задания.</p>
 
   <div id="topics"></div>
 
@@ -105,6 +117,8 @@
 
   <footer class="foot">
     <span>Списки слов к заданиям 4 и 5 взяты из «Навигатора самостоятельной подготовки к ЕГЭ-2026» ФИПИ. Сайт работает без регистрации и ничего не отправляет на сервер.</span>
+    <span>Нашли ошибку в задании или хотите новую тему — напишите разработчику.</span>
+    <div id="dev"></div>
   </footer>
 </div>
 
@@ -148,10 +162,33 @@
     const prog = s ? `<div class="prog"><div class="bar"><i style="width:${pct}%"></i></div>
         <span>выучено ${learned} из ${total}${errors ? ` · <span class="err">${errors} ${plural(errors, 'ошибка', 'ошибки', 'ошибок')}</span>` : ''}</span></div>`
       : `<div class="prog"><div class="bar"><i></i></div><span>${total ? `${total} ${plural(total, ...units)} · ` : ''}не начато</span></div>`;
-    return `<a class="topic" href="${esc(t.file)}" data-accent="${esc(t.accent || '')}">
+    const hay = norm([t.title, t.desc, t.group, t.keywords, t.task ? `№${t.task} ${t.task} задание ${t.task} егэ ${t.task}` : '', t.grade ? `${t.grade} класс` : ''].join(' '));
+    return `<a class="topic" href="${esc(t.file)}" data-accent="${esc(t.accent || '')}" data-s="${esc(hay)}">
       <div class="head"><h3>${esc(t.title)}</h3>${badge ? `<span class="badge">${badge}</span>` : ''}</div>
       ${t.desc ? `<p>${esc(t.desc)}</p>` : ''}${prog}</a>`;
   }
+
+  /* --- поиск по темам --- */
+  function norm(s) { return String(s || '').toLowerCase().replace(/ё/g, 'е').replace(/[«»"()]/g, ' '); }
+  const find = $('#find');
+  function filter() {
+    const words = norm(find.value).replace(/№/g, ' ').split(/\s+/).filter(Boolean);
+    let shown = 0;
+    document.querySelectorAll('#topics .sec').forEach(sec => {
+      let n = 0;
+      sec.querySelectorAll('.topic').forEach(a => {
+        const ok = words.every(w => a.dataset.s.includes(w));
+        a.hidden = !ok; if (ok) n++;
+      });
+      sec.hidden = !n; shown += n;
+    });
+    $('#findEmpty').hidden = !!shown || !words.length;
+    $('#continue').hidden = !last || !!words.length;
+  }
+  find.addEventListener('input', filter);
+
+  /* --- разработчик --- */
+  $('#dev').innerHTML = Core.devHTML();
 
   /* --- карта заданий ЕГЭ --- */
   const MAP = [

@@ -151,7 +151,7 @@
     const app = $('#app');
     app.className = 'wrap';
     app.innerHTML = `
-      <a class="back" href="index.html">← Все темы</a>
+      <div class="topbar"><a class="back" href="index.html">← Все темы</a><span data-theme-toggle></span></div>
       <header class="top">
         <div class="brand">
           <span class="eyebrow">${esc(cfg.eyebrow || '')}</span>
@@ -172,6 +172,7 @@
       <footer class="foot">
         ${cfg.source ? `<span>${cfg.source}</span>` : ''}
         <span>${Core.storageOK() ? 'Прогресс хранится только в этом браузере. Подробнее — на главной странице.' : '<b>Браузер не сохраняет прогресс</b> (режим инкогнито?). После закрытия вкладки результаты пропадут.'}</span>
+        ${Core.devHTML()}
       </footer>`;
     return tabs.map(t => t[0]);
   }
@@ -741,6 +742,7 @@
     if (cfg.exam) renderExamShell();
     bind();
     learnNext(); dictNew();
+    if (window.Theme) Theme.mountAll();
     saveSummary();
     const h = (location.hash || '').slice(1), saved = S.prefs().tab;
     show(tabs.includes(h) ? h : (tabs.includes(saved) ? saved : 'learn'));

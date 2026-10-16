@@ -11,7 +11,8 @@ window.TOPICS = [
     "order": 40,
     "accent": "violet",
     "count": 221,
-    "unit": "слово|слова|слов"
+    "unit": "слово|слова|слов",
+    "keywords": "орфоэпия ударение ударения произношение"
   },
   {
     "file": "paronimy.html",
@@ -24,7 +25,8 @@ window.TOPICS = [
     "order": 50,
     "accent": "rose",
     "count": 157,
-    "unit": ""
+    "unit": "",
+    "keywords": "паронимы лексика значение слова"
   },
   {
     "file": "leksicheskie-normy.html",
@@ -37,7 +39,8 @@ window.TOPICS = [
     "order": 60,
     "accent": "olive",
     "count": 55,
-    "unit": ""
+    "unit": "",
+    "keywords": "плеоназм тавтология лишнее слово сочетаемость лексика"
   },
   {
     "file": "formy-slova.html",
@@ -50,7 +53,8 @@ window.TOPICS = [
     "order": 70,
     "accent": "amber",
     "count": 107,
-    "unit": ""
+    "unit": "",
+    "keywords": "морфология грамматика формы слов род падеж числительные"
   },
   {
     "file": "korni.html",
@@ -63,7 +67,8 @@ window.TOPICS = [
     "order": 90,
     "accent": "blue",
     "count": 112,
-    "unit": "слово|слова|слов"
+    "unit": "слово|слова|слов",
+    "keywords": "корень корни чередование безударные гласные"
   },
   {
     "file": "pristavki.html",
@@ -76,7 +81,8 @@ window.TOPICS = [
     "order": 100,
     "accent": "plum",
     "count": 119,
-    "unit": "слово|слова|слов"
+    "unit": "слово|слова|слов",
+    "keywords": "приставка приставки пре при з с ъ ь ы и"
   },
   {
     "file": "suffiksy.html",
@@ -89,7 +95,8 @@ window.TOPICS = [
     "order": 110,
     "accent": "violet",
     "count": 80,
-    "unit": "слово|слова|слов"
+    "unit": "слово|слова|слов",
+    "keywords": "суффикс суффиксы ек ик ец иц"
   },
   {
     "file": "okonchaniya.html",
@@ -102,7 +109,8 @@ window.TOPICS = [
     "order": 120,
     "accent": "rose",
     "count": 0,
-    "unit": ""
+    "unit": "",
+    "keywords": "окончания спряжение глаголы причастия"
   },
   {
     "file": "ne-ni.html",
@@ -115,7 +123,8 @@ window.TOPICS = [
     "order": 130,
     "accent": "teal",
     "count": 72,
-    "unit": ""
+    "unit": "",
+    "keywords": "не ни слитно раздельно частица"
   },
   {
     "file": "slitno-defis.html",
@@ -128,7 +137,8 @@ window.TOPICS = [
     "order": 140,
     "accent": "amber",
     "count": 74,
-    "unit": ""
+    "unit": "",
+    "keywords": "слитно раздельно дефис предлоги союзы наречия"
   },
   {
     "file": "n-nn.html",
@@ -141,7 +151,8 @@ window.TOPICS = [
     "order": 150,
     "accent": "olive",
     "count": 115,
-    "unit": ""
+    "unit": "",
+    "keywords": "н нн причастия прилагательные"
   },
   {
     "file": "pre-pri-slovar.html",
@@ -154,6 +165,7 @@ window.TOPICS = [
     "order": 200,
     "accent": "teal",
     "count": 52,
-    "unit": "слово|слова|слов"
+    "unit": "слово|слова|слов",
+    "keywords": "пре при словарные слова диктант"
   }
 ];

@@ -150,7 +150,13 @@
     ? `<b>Прогресс хранится только в этом браузере.</b> Он пропадёт, если очистить данные браузера, зайти в режиме инкогнито или с другого устройства. На iPhone Safari может стереть его, если не заходить на сайт больше недели — добавь сайт на экран «Домой». Перенести прогресс можно через «Сохранить в файл» на главной странице.`
     : `<b>Браузер не даёт сохранять прогресс.</b> Скорее всего, включён режим инкогнито или запрещены данные сайтов. Заниматься можно, но после закрытия вкладки результаты пропадут.`;
 
+  /* ---------- разработчик ---------- */
+  const DEV = { name: 'FreshCarrot1', url: 'https://t.me/FreshCarrot1' };
+  const TG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.4 4.3 2.9 11.4c-1.3.5-1.2 1.2-.2 1.5l4.7 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.3-2.2 4.8 3.5c.9.5 1.5.2 1.7-.8l3.1-14.7c.3-1.3-.5-1.9-1.5-1.5zM8.6 14.1l9.1-5.7c.4-.3.8-.1.5.2l-7.8 7-.3 3.3-1.5-4.8z"/></svg>';
+  const devHTML = () => `<div class="dev"><span>Разработчик сайта — <a href="${DEV.url}" target="_blank" rel="noopener">@${DEV.name}</a></span><a class="btn ghost small" href="${DEV.url}" target="_blank" rel="noopener">${TG}Написать разработчику</a></div>`;
+
   window.Core = {
+    DEV, devHTML,
     storageOK: () => storageOK, askPersist, TopicStore, summaries, examOf,
     exportData, downloadExport, importData, resetAll,
     getJSON, setJSON, esc, plural, shuffle, pickWeighted, pickN, notice,

@@ -41,6 +41,7 @@ for (const file of files) {
     accent: meta.accent || '',
     count: Number(meta.count) || 0,
     unit: meta.unit || '',
+    keywords: meta.keywords || '',
   };
   topics.push(t);
 }
