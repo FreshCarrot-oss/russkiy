@@ -1,0 +1,40 @@
+# Публикация сайта на GitHub Pages.
+# При каждой загрузке файлов в ветку main:
+#   1) собирается список тем (topics.js) из всех .html в корне;
+#   2) сайт выкладывается на GitHub Pages.
+# В настройках репозитория: Settings → Pages → Source: «GitHub Actions».
+name: Публикация сайта
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Собрать список тем
+        run: node tools/build-topics.js
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4

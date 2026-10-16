@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Тренажёры по русскому</title>
+<meta name="description" content="Тренажёры по русскому языку для 10 класса и подготовки к ЕГЭ: ударения, паронимы, формы слов, корни, приставки, Н и НН.">
+<meta name="theme-color" content="#f4f4f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121219" media="(prefers-color-scheme: dark)">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  .hero { display: grid; gap: 8px; padding-block: 10px 6px; }
+  .hero h1 { font-size: clamp(30px, 9vw, 40px); }
+  .hero p { margin: 0; color: var(--muted); max-width: 60ch; }
+  .sec { display: grid; gap: 10px; margin-top: 22px; }
+  .sec > h2 { font: 700 13px/1 var(--f-ui); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+  .topics { display: grid; gap: 10px; }
+  .topic {
+    display: grid; gap: 8px; text-decoration: none; color: var(--ink);
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px;
+  }
+  .topic:hover { border-color: var(--accent); }
+  .topic .head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .topic h3 { margin: 0; font: 700 21px/1.2 var(--f-word); color: var(--ink); }
+  .topic .badge { flex: none; font: 700 12px/1 var(--f-ui); letter-spacing: .04em; color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 6px 9px; white-space: nowrap; }
+  .topic p { margin: 0; color: var(--muted); font-size: 15px; }
+  .topic .prog { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .topic .prog .bar { height: 5px; }
+  .topic .prog .err { color: var(--bad); font-weight: 700; }
+  .cont { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; text-decoration: none; color: var(--ink); }
+  .cont b { font-family: var(--f-word); font-size: 19px; }
+  details.card > summary { cursor: pointer; font-weight: 700; list-style: none; display: flex; justify-content: space-between; gap: 8px; }
+  details.card > summary::-webkit-details-marker { display: none; }
+  details.card > summary::after { content: "+"; color: var(--muted); font-weight: 400; }
+  details[open].card > summary::after { content: "−"; }
+  .map { list-style: none; margin: 0; padding: 0; display: grid; }
+  .map li { display: grid; grid-template-columns: 2.2em 1fr auto; gap: 8px; padding: 7px 0; border-top: 1px solid var(--line); font-size: 15px; align-items: baseline; }
+  .map li:first-child { border-top: 0; }
+  .map .num { font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .map a { font-size: 13px; font-weight: 700; white-space: nowrap; }
+  .field { display: grid; gap: 4px; }
+  .field label { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .field input { min-height: 44px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--card); padding: 0 12px; font-size: 16px; }
+  .msg { font-size: 14px; margin: 0; min-height: 1.4em; }
+  .msg.ok { color: var(--good); } .msg.no { color: var(--bad); }
+  .confirm { display: grid; gap: 8px; border-radius: 12px; padding: 12px; background: var(--bad-soft); }
+  textarea.report { width: 100%; min-height: 160px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--card); padding: 10px 12px; font: 14px/1.5 var(--f-ui); color: var(--ink); resize: vertical; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="eyebrow">10 класс · подготовка к ЕГЭ-2026</span>
+    <h1>Тренажёры по <span class="hl">русскому</span></h1>
+    <p>Выбери тему. В каждой есть тренировка со случайными словами, диктант, задание в формате ЕГЭ, полный список и правила.</p>
+  </header>
+
+  <div class="notice" id="notice" style="margin-top:14px"></div>
+
+  <a class="card cont" id="continue" href="#" hidden style="margin-top:14px">
+    <span><span class="muted" style="font-size:13px">Продолжить</span><br><b id="contTitle"></b></span>
+    <span class="btn small" style="display:inline-flex;align-items:center">Открыть</span>
+  </a>
+
+  <div id="topics"></div>
+
+  <section class="sec">
+    <h2>ЕГЭ по русскому</h2>
+    <details class="card">
+      <summary>Какие задания проверяют нормы и правописание</summary>
+      <p class="task-line">Задания 1–3 и 22–26 — работа с текстом, 27 — сочинение. Остальные проверяют знание норм и правил. Здесь отмечено, по каким уже есть тренажёр.</p>
+      <ul class="map" id="map"></ul>
+    </details>
+  </section>
+
+  <section class="sec">
+    <h2>Мой прогресс</h2>
+    <div class="card">
+      <p class="task-line">Прогресс хранится в этом браузере. Чтобы перенести его на другое устройство или не потерять, сохрани файл и загрузи его там.</p>
+      <div class="row">
+        <button type="button" class="btn ghost" id="exp">Сохранить в файл</button>
+        <button type="button" class="btn ghost" id="impBtn">Загрузить из файла</button>
+        <input type="file" id="imp" accept="application/json,.json" hidden>
+      </div>
+      <p class="msg" id="impMsg" aria-live="polite"></p>
+    </div>
+    <details class="card">
+      <summary>Отчёт для учителя</summary>
+      <p class="task-line">Текст со сводкой по всем темам. Скопируй его и отправь учителю в мессенджер.</p>
+      <div class="field"><label for="who">Имя и класс</label><input id="who" type="text" autocomplete="name" placeholder="Например: Иван Петров, 10 «Б»"></div>
+      <textarea class="report" id="report" readonly aria-label="Текст отчёта"></textarea>
+      <div class="row"><button type="button" class="btn" id="copy">Скопировать отчёт</button></div>
+      <p class="msg" id="copyMsg" aria-live="polite"></p>
+    </details>
+    <details class="card">
+      <summary>Начать заново</summary>
+      <p class="task-line">Удалит все ответы и статистику по всем темам в этом браузере.</p>
+      <div class="row"><button type="button" class="btn danger" id="reset">Удалить весь прогресс</button></div>
+      <div class="confirm" id="resetBox" hidden>
+        <b>Точно удалить? Вернуть не получится, если нет сохранённого файла.</b>
+        <div class="row"><button type="button" class="btn danger" id="resetYes">Да, удалить</button><button type="button" class="btn ghost" id="resetNo">Отмена</button></div>
+      </div>
+    </details>
+  </section>
+
+  <footer class="foot">
+    <span>Списки слов к заданиям 4 и 5 взяты из «Навигатора самостоятельной подготовки к ЕГЭ-2026» ФИПИ. Сайт работает без регистрации и ничего не отправляет на сервер.</span>
+  </footer>
+</div>
+
+<script src="assets/core.js"></script>
+<script src="topics.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { esc, plural } = Core;
+  const $ = s => document.querySelector(s);
+  const TOPICS = (window.TOPICS || []).slice().sort((a, b) => (a.order || 999) - (b.order || 999) || a.title.localeCompare(b.title, 'ru'));
+  const SUMS = Core.summaries();
+
+  /* --- предупреждение о хранении --- */
+  $('#notice').innerHTML = Core.notice();
+  if (!Core.storageOK()) $('#notice').classList.add('bad');
+  Core.askPersist();
+
+  /* --- продолжить --- */
+  let last = null;
+  TOPICS.forEach(t => { const s = SUMS[t.id]; if (s && s.updated && (!last || s.updated > SUMS[last.id].updated)) last = t; });
+  if (last) { $('#continue').hidden = false; $('#continue').href = last.file; $('#contTitle').textContent = last.title; }
+
+  /* --- темы по разделам --- */
+  if (!TOPICS.length) {
+    $('#topics').innerHTML = '<section class="sec"><div class="card"><p>Список тем пуст. Если ты владелец сайта, проверь, что рядом с index.html лежит файл topics.js (его создаёт сборка, см. README).</p></div></section>';
+  } else {
+    const groups = [];
+    TOPICS.forEach(t => { const g = t.group || 'Темы'; if (!groups.includes(g)) groups.push(g); });
+    $('#topics').innerHTML = groups.map(g => `<section class="sec"><h2>${esc(g)}</h2><div class="topics">${
+      TOPICS.filter(t => (t.group || 'Темы') === g).map(card).join('')}</div></section>`).join('');
+  }
+  function card(t) {
+    const s = SUMS[t.id];
+    const total = (s && s.total) || t.count || 0;
+    const learned = (s && s.learned) || 0;
+    const errors = (s && s.errors) || 0;
+    const pct = total ? Math.round(learned / total * 100) : 0;
+    const units = (t.unit && t.unit.split('|').length === 3) ? t.unit.split('|') : ['задание', 'задания', 'заданий'];
+    const badge = t.task ? `ЕГЭ №${esc(t.task)}` : (t.grade ? `${esc(t.grade)} класс` : '');
+    const prog = s ? `<div class="prog"><div class="bar"><i style="width:${pct}%"></i></div>
+        <span>выучено ${learned} из ${total}${errors ? ` · <span class="err">${errors} ${plural(errors, 'ошибка', 'ошибки', 'ошибок')}</span>` : ''}</span></div>`
+      : `<div class="prog"><div class="bar"><i></i></div><span>${total ? `${total} ${plural(total, ...units)} · ` : ''}не начато</span></div>`;
+    return `<a class="topic" href="${esc(t.file)}" data-accent="${esc(t.accent || '')}">
+      <div class="head"><h3>${esc(t.title)}</h3>${badge ? `<span class="badge">${badge}</span>` : ''}</div>
+      ${t.desc ? `<p>${esc(t.desc)}</p>` : ''}${prog}</a>`;
+  }
+
+  /* --- карта заданий ЕГЭ --- */
+  const MAP = [
+    [4, 'Орфоэпические нормы: ударение'], [5, 'Паронимы'], [6, 'Лексические нормы: лишнее или неуместное слово'],
+    [7, 'Морфологические нормы: формы слов (с 2026 года — любые грамматические ошибки в выделенном слове)'],
+    [8, 'Синтаксические нормы: грамматические ошибки в предложениях'], [9, 'Правописание корней'], [10, 'Правописание приставок'],
+    [11, 'Суффиксы (кроме Н и НН)'], [12, 'Окончания глаголов и суффиксы причастий'], [13, 'НЕ и НИ'],
+    [14, 'Слитное, дефисное и раздельное написание'], [15, 'Н и НН'], [16, 'Однородные члены и сложносочинённое предложение'],
+    [17, 'Обособленные члены предложения'], [18, 'Вводные слова и обращения'], [19, 'Сложноподчинённое предложение'],
+    [20, 'Сложное предложение с разными видами связи'], [21, 'Пунктуационный анализ'],
+  ];
+  $('#map').innerHTML = MAP.map(([n, name]) => {
+    const tops = TOPICS.filter(t => String(t.task) === String(n));
+    return `<li><span class="num">${n}</span><span>${esc(name)}</span><span>${tops.map(t => `<a href="${esc(t.file)}">${esc(t.title)}</a>`).join('<br>') || '<span class="muted" style="font-size:13px">скоро</span>'}</span></li>`;
+  }).join('');
+
+  /* --- экспорт / импорт --- */
+  $('#exp').addEventListener('click', () => {
+    try { Core.downloadExport(); msg('#impMsg', 'Файл сохранён в «Загрузки».', true); }
+    catch (e) { msg('#impMsg', 'Не получилось сохранить файл: ' + e.message, false); }
+  });
+  $('#impBtn').addEventListener('click', () => $('#imp').click());
+  $('#imp').addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try { const n = Core.importData(JSON.parse(r.result)); msg('#impMsg', `Прогресс загружен (${n} ${plural(n, 'запись', 'записи', 'записей')}). Обновляю страницу…`, true); setTimeout(() => location.reload(), 900); }
+      catch (err) { msg('#impMsg', 'Не удалось прочитать файл. ' + err.message, false); }
+    };
+    r.readAsText(f);
+    e.target.value = '';
+  });
+  function msg(sel, text, ok) { const m = $(sel); m.textContent = text; m.className = 'msg ' + (ok ? 'ok' : 'no'); }
+
+  /* --- отчёт для учителя --- */
+  const who = $('#who');
+  try { who.value = Core.getJSON('name', ''); } catch (e) {}
+  function report() {
+    const d = new Date().toLocaleDateString('ru-RU');
+    const lines = [`Отчёт о подготовке${who.value.trim() ? ': ' + who.value.trim() : ''} (${d})`, ''];
+    let any = false;
+    TOPICS.forEach(t => {
+      const s = SUMS[t.id]; if (!s) return; any = true;
+      const ex = Core.examOf(t.id);
+      lines.push(`${t.title}${t.task ? ` (ЕГЭ №${t.task})` : ''}: выучено ${s.learned} из ${s.total}, к повторению ${s.errors}` + (ex.n ? `, задания ЕГЭ: ${ex.ok} из ${ex.n}` : ''));
+      if (s.errs && s.errs.length) lines.push('  Ошибки: ' + s.errs.slice(0, 10).join(', '));
+    });
+    if (!any) lines.push('Пока ни одна тема не начата.');
+    $('#report').value = lines.join('\n');
+  }
+  who.addEventListener('input', () => { Core.setJSON('name', who.value); report(); });
+  report();
+  $('#copy').addEventListener('click', () => {
+    const text = $('#report').value;
+    const done = () => msg('#copyMsg', 'Скопировано. Вставь в сообщение учителю.', true);
+    const fallback = () => { const ta = $('#report'); ta.focus(); ta.select(); try { document.execCommand('copy'); done(); } catch (e) { msg('#copyMsg', 'Выдели текст и скопируй вручную.', false); } };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
+  });
+
+  /* --- сброс --- */
+  $('#reset').addEventListener('click', () => { $('#resetBox').hidden = false; $('#reset').hidden = true; });
+  $('#resetNo').addEventListener('click', () => { $('#resetBox').hidden = true; $('#reset').hidden = false; });
+  $('#resetYes').addEventListener('click', () => { Core.resetAll(); location.reload(); });
+})();
+</script>
+</body>
+</html>

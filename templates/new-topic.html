@@ -1,0 +1,77 @@
+<!doctype html>
+<!--
+  ШАБЛОН НОВОЙ ТЕМЫ.
+  1. Скопируйте файл в корень сайта (рядом с index.html) и переименуйте латиницей: например, ne-ni.html.
+  2. Поменяйте теги <meta name="topic:..."> — по ним тема появится на главной.
+  3. Замените слова в массиве ITEMS и правила в <template id="rules">.
+  4. Загрузите файл на GitHub. Через 1–2 минуты тема появится на сайте.
+  Подробности — в templates/README.md
+-->
+<html lang="ru" data-accent="teal">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Название темы — тренажёры по русскому</title>
+
+<!-- Карточка темы на главной странице -->
+<meta name="topic:id" content="nazvanie-temy">          <!-- уникальный id латиницей; не меняйте после публикации, иначе прогресс учеников обнулится -->
+<meta name="topic:title" content="Название темы">
+<meta name="topic:desc" content="Одно предложение о том, что здесь тренируется.">
+<meta name="topic:group" content="ЕГЭ: орфография">     <!-- раздел на главной: «ЕГЭ: языковые нормы», «ЕГЭ: орфография», «Словарные диктанты», «10 класс» или свой -->
+<meta name="topic:task" content="13">                    <!-- номер задания ЕГЭ; если темы нет в ЕГЭ — удалите строку -->
+<meta name="topic:grade" content="10">
+<meta name="topic:order" content="130">                  <!-- порядок на главной: чем меньше, тем выше -->
+<meta name="topic:accent" content="teal">                <!-- цвет: violet, teal, blue, rose, amber, plum, olive -->
+<meta name="topic:count" content="4">                    <!-- сколько заданий в теме (показывается до начала занятий) -->
+
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<div id="app"></div>
+
+<!-- Вкладка «Правила». Обычный HTML. Внутри <w>...</w> можно выделять букву: <w>пр[и]шить</w> -->
+<template id="rules">
+  <article class="card rule">
+    <h3>Правило</h3>
+    <p>Текст правила. Пример: <w>пр[и]шить</w>.</p>
+  </article>
+</template>
+
+<script src="assets/core.js"></script>
+<script src="assets/trainer.js"></script>
+<script>
+/* Задания. В тексте знак # — место пропуска.
+   t — текст, a — правильный ответ, o — варианты (если не заданы, берутся из options ниже),
+   c — раздел (для фильтров), g — группа правила (объяснение после ответа), n — пояснение к этому слову. */
+const ITEMS = [
+  { t: 'пр#шить пуговицу', a: 'и', c: 'one', g: 'pri', n: 'Присоединение.' },
+  { t: 'пр#красный', a: 'е', c: 'one', g: 'pre' },
+  { t: '# костюм', a: 'деловой', o: ['деловой', 'деловитый'], c: 'two', n: 'Деловой — связанный с работой.' },
+  { t: 'пара #', a: 'носков', o: ['носков', 'носок'], c: 'two' },
+];
+
+Trainer.start({
+  id: 'nazvanie-temy',                 /* тот же id, что в meta topic:id */
+  kind: 'choice',                      /* 'choice' — выбрать вариант; 'stress' — поставить ударение (тогда items: [{ w: 'аэропОрты' }]) */
+  title: 'Название темы',
+  eyebrow: 'ЕГЭ · задание 13',
+  prompt: 'Вставь букву',
+  options: ['е', 'и'],                 /* варианты по умолчанию */
+  categories: [{ key: 'one', label: 'Первый раздел' }, { key: 'two', label: 'Второй раздел' }],
+  groups: {
+    pri: { h: 'ПРИ', p: 'Приближение, присоединение, неполнота действия.' },
+    pre: { h: 'ПРЕ', p: '«Очень» или «пере».' },
+  },
+  ear: true,                           /* диктант на слух (только для тем с буквами) */
+  /* Режим «Как на ЕГЭ». Варианты:
+     { type: 'rows', task: 10 }  — ряды по 3 слова, найти ряды с одной буквой (задания 9–12)
+     { type: 'odd', task: 5, q: '...' } — одно из пяти выделенных слов ошибочно (задания 5, 7)
+     { type: 'digits', task: 15, variants: [{ q: '...где НН', pick: 'нн' }] } — цифры в скобках (задание 15)
+     { type: 'stressSelect', task: 4 } — для kind: 'stress'
+     Если режим не нужен — удалите строку exam. */
+  exam: { type: 'rows', task: 10 },
+  items: ITEMS,
+});
+</script>
+</body>
+</html>
